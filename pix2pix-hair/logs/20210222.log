@@ -1,0 +1,9 @@
+Loading: ./hair_segmentation/checkpoints/MobileHairNet_epoch-198.pth...
+Done.
+Epoch:0|Batch:0
+Train: loss_GAN: 3.572712, hair loss: 5.637331, face loss: 6.388926, loss:_G: 15.598969, loss_D: 3.648082
+Validation: loss_GAN: 2.850445, hair loss: 8.678793, face loss: 6.047473, loss:_G: 17.576710, loss_D: 3.782841
+Validation: loss_GAN: 2.603610, hair loss: 9.002977, face loss: 5.765213, loss:_G: 17.371799, loss_D: 3.634070
+Validation: loss_GAN: 2.853284, hair loss: 6.003931, face loss: 6.635444, loss:_G: 15.492659, loss_D: 3.860358
+Validation: loss_GAN: 2.898603, hair loss: 8.540609, face loss: 5.635162, loss:_G: 17.074375, loss_D: 3.778356
+Validation: loss_GAN: 2.677675, hair loss: 10.957397, face loss: 6.424347, loss:_G: 20.059420, loss_D: 3.934852
