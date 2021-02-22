@@ -3,12 +3,11 @@ import sys
 import numpy as np
 
 import torch
-import torch.nn.functional as F
 from torch.autograd import Variable
 
 from configs import get_config
 from utils import *
-from datasets import get_loaders, save_images
+from datasets import get_loaders
 from models import GeneratorUNet, Discriminator
 from networks import Vgg16, ResNet18
 
@@ -76,13 +75,12 @@ def main(config):
             fake_im1 = generator(im1, m2, z)
             pred_fake = discriminator(fake_im1, im2)
             loss_GAN = config.lambda_gan * criterion_GAN(pred_fake, valid)
-            # Style-loss
+            # Style loss
             fake_m2 = torch.argmax(model(fake_im1), 1).unsqueeze(1).type(torch.uint8).to(config.device)
             fake_m2 = fake_im1 * fake_m2
             hair_loss = config.lambda_style * calc_style_loss(fake_m2, m2, vgg) + calc_content_loss(fake_m2, m2, vgg)
             hair_loss *= config.lambda_hair
-            # Face-loss
-            # face_loss = config.lambda_style * calc_style_loss(fake_im1 * (1-fake_m2), im1 * (1-m1), vgg) + calc_content_loss(fake_im1 * (1-fake_m2), im1 * (1-m1), vgg)
+            # Face loss
             face_loss = l1_loss(fake_m2 * (1-fake_m2), im1 * (1-m1))
             face_loss *= config.lambda_face 
             # Total loss
@@ -111,12 +109,12 @@ def main(config):
             optimizer_D.step()
 
             if i % config.sample_interval == 0:
-                msg = "Train: loss_GAN: %.6f, hair loss: %.6f, face loss: %.6f, loss:_G: %.6f, loss_D: %.6f\n" % \
+                msg = "Train || loss_GAN: %.6f, hair loss: %.6f, face loss: %.6f, loss:_G: %.6f, loss_D: %.6f\n" % \
                     (loss_GAN.item(), hair_loss.item(), face_loss.item(), loss_G.item(), loss_D.item())
-                sys.stdout.write("Epoch:%d|Batch:%d\n" % (epoch, i))
+                sys.stdout.write("Epoch: %d || Batch: %d\n" % (epoch, i))
                 sys.stdout.write(msg)
-                for j in range(5):
-                    fname = os.path.join(config.save_path, "Train_Epoch:%d|Batch:%d_%d.png" % (epoch, i, j))
+                for j in range(3):
+                    fname = os.path.join(config.save_path, "Train_Epoch:%d_Batch:%d_%d.png" % (epoch, i, j))
                     sample_images([im1[j], im2[j], fake_im1[j]], ["img1", "img2", "img1+img2"], fname)
                 for j, (im1, m1, im2, m2) in enumerate(val_loader):
                     with torch.no_grad():
@@ -126,16 +124,15 @@ def main(config):
                         fake_im1 = generator(im1, m2, z)
                         pred_fake = discriminator(fake_im1, im2)
                         loss_GAN = config.lambda_gan * criterion_GAN(pred_fake, valid)
-                        # Style-loss
+                        # Style loss
                         fake_m2 = torch.argmax(model(fake_im1), 1).unsqueeze(1).type(torch.uint8).to(config.device)
                         fake_m2 = fake_im1 * fake_m2
                         hair_loss = config.lambda_style * calc_style_loss(fake_m2, m2, vgg) + calc_content_loss(fake_m2, m2, vgg)
                         hair_loss *= config.lambda_hair
-                        # Face-loss
+                        # Face loss
                         # face_loss = config.lambda_style * calc_style_loss(fake_im1 * (1-fake_m2), im1 * (1-m1), vgg) + calc_content_loss(fake_im1 * (1-fake_m2), im1 * (1-m1), vgg)
                         face_loss = l1_loss(fake_m2 * (1-fake_m2), im1 * (1-m1))
                         face_loss *= config.lambda_face
-                        # face_loss = l1_loss(fake_m2 * (1-m1), im1 * (1-m1)) # config.lambda_style * calc_style_loss(fake_m2 * (1-m1), 1-m1, vgg) + calc_content_loss(fake_m2 * (1-m1), 1-m1, vgg)
                         # Total loss
                         loss_G = loss_GAN + hair_loss + face_loss
                     
@@ -146,13 +143,13 @@ def main(config):
                         loss_fake = criterion_GAN(pred_fake, fake)
                         # Total loss
                         loss_D = 0.5 * (loss_real + loss_fake)
-                        msg = "Validation: loss_GAN: %.6f, hair loss: %.6f, face loss: %.6f, loss:_G: %.6f, loss_D: %.6f\n" % \
+                        msg = "Validation || loss_GAN: %.6f, hair loss: %.6f, face loss: %.6f, loss:_G: %.6f, loss_D: %.6f\n" % \
                               (loss_GAN.item(), hair_loss.item(), face_loss.item(), loss_G.item(), loss_D.item())
                         sys.stdout.write(msg)
-                        fname = os.path.join(config.save_path, "Validation Epoch:%d_%d.png" % (epoch, j))
+                        fname = os.path.join(config.save_path, "Validation_Epoch:%d_Batch:%d_%d.png" % (epoch, i, j))
                         sample_images([im1[0], im2[0], fake_im1[0]], ["img1", "img2", "img1+img2"], fname)
 
-                        if j == 4:
+                        if j == 2:
                             break
 
         if epoch % config.checkpoint_interval == 0:
