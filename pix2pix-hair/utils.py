@@ -1,7 +1,7 @@
 import os
 import matplotlib.pyplot as plt
 import torch
-from hair_segmentation.model.transfer_model import MobileHairNet
+from hairsegmentation.model.transfer_model import MobileHairNet
 
 
 mse_loss = torch.nn.MSELoss()

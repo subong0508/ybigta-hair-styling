@@ -3,10 +3,10 @@ import argparse
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--device', type=str, default='cuda:0')
-parser.add_argument('--model_path', type=str, default='./hair_segmentation/checkpoints')
+parser.add_argument('--model_path', type=str, default='./hairsegmentation/checkpoints')
 parser.add_argument('--model_weights', type=str, default='MobileHairNet_epoch-198.pth')
 parser.add_argument('--freeze', type=bool, default=True)
-parser.add_argument('--image_path', type=str, default='./hair_segmentation/dataset/images')
+parser.add_argument('--image_path', type=str, default='./hairsegmentation/dataset/images')
 parser.add_argument('--image_size', type=int, default=256)
 parser.add_argument('--checkpoints', type=str, default='./checkpoints')
 parser.add_argument('--save_path', type=str, default='./samples/results')
