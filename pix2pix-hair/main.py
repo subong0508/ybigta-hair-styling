@@ -87,6 +87,7 @@ def main(config):
                 face_loss = l1_loss(fake_m2 * (1-m1), im1 * (1-m1))
                 sys.stdout.write("MobileHairNet not works\n")
             hair_loss *= config.lambda_hair
+            face_loss *= config.lambda_face
 
             # Total loss
             loss_G = loss_GAN + hair_loss + face_loss
@@ -141,6 +142,7 @@ def main(config):
                             face_loss = l1_loss(fake_m2 * (1-m1), im1 * (1-m1))
                             sys.stdout.write("MobileHairNet not works\n")
                         hair_loss *= config.lambda_hair
+                        face_loss *= config.lambda_face
 
                         # Total loss
                         loss_G = loss_GAN + hair_loss + face_loss
