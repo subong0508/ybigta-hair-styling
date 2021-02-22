@@ -71,18 +71,23 @@ def main(config):
             optimizer_G.zero_grad()
 
             # GAN loss
-            z = resnet(m2)
-            fake_im1 = generator(im1, m2, z)
-            pred_fake = discriminator(fake_im1, im2)
+            z = resnet(im2 * m2)
+            fake_im = generator(im1, im2 * m2, z)
+            pred_fake = discriminator(fake_im, im2)
             loss_GAN = config.lambda_gan * criterion_GAN(pred_fake, valid)
-            # Style loss
-            fake_m2 = torch.argmax(model(fake_im1), 1).unsqueeze(1).type(torch.uint8).to(config.device)
-            fake_m2 = fake_im1 * fake_m2
-            hair_loss = config.lambda_style * calc_style_loss(fake_m2, m2, vgg) + calc_content_loss(fake_m2, m2, vgg)
+
+            # Hair, Face loss
+            fake_m2 = torch.argmax(model(fake_im), 1).unsqueeze(1).type(torch.uint8).repeat(1, 3, 1, 1).to(config.device)
+            if 0.5 * torch.sum(m1)  <= torch.sum(fake_m2) <= 1.5 * torch.sum(m1):
+                hair_loss = config.lambda_style * calc_style_loss(fake_im * fake_m2, im2 * m2, vgg) + calc_content_loss(fake_im * fake_m2, im2 * m2, vgg)
+                face_loss = l1_loss(fake_m2 * (1-fake_m2), im1 * (1-m1))
+                sys.stdout.write("MobileHairNet works\n")
+            else:
+                hair_loss = config.lambda_style * calc_style_loss(fake_im * m1, im2 * m2, vgg) + calc_content_loss(fake_im * m1, im2 * m2, vgg)
+                face_loss = l1_loss(fake_m2 * (1-m1), im1 * (1-m1))
+                sys.stdout.write("MobileHairNet not works\n")
             hair_loss *= config.lambda_hair
-            # Face loss
-            face_loss = l1_loss(fake_m2 * (1-fake_m2), im1 * (1-m1))
-            face_loss *= config.lambda_face 
+
             # Total loss
             loss_G = loss_GAN + hair_loss + face_loss
             
@@ -100,7 +105,7 @@ def main(config):
             pred_real = discriminator(im1, im2)
             loss_real = criterion_GAN(pred_real, valid)
             # Fake loss
-            pred_fake = discriminator(fake_im1.detach(), im2)
+            pred_fake = discriminator(fake_im.detach(), im2)
             loss_fake = criterion_GAN(pred_fake, fake)
             # Total loss
             loss_D = 0.5 * (loss_real + loss_fake)
@@ -113,44 +118,47 @@ def main(config):
                     (loss_GAN.item(), hair_loss.item(), face_loss.item(), loss_G.item(), loss_D.item())
                 sys.stdout.write("Epoch: %d || Batch: %d\n" % (epoch, i))
                 sys.stdout.write(msg)
-                for j in range(3):
-                    fname = os.path.join(config.save_path, "Train_Epoch:%d_Batch:%d_%d.png" % (epoch, i, j))
-                    sample_images([im1[j], im2[j], fake_im1[j]], ["img1", "img2", "img1+img2"], fname)
+                fname = os.path.join(config.save_path, "Train_Epoch:%d_Batch:%d.png" % (epoch, i))
+                sample_images([im1[0], im2[0], fake_im[0]], ["img1", "img2", "img1+img2"], fname)
                 for j, (im1, m1, im2, m2) in enumerate(val_loader):
                     with torch.no_grad():
                         valid = Variable(torch.Tensor(np.ones((im1.size(0), *patch))).to(config.device), requires_grad=False)
                         fake = Variable(torch.Tensor(np.ones((im1.size(0), *patch))).to(config.device), requires_grad=False)
-                        z = resnet(m2)
-                        fake_im1 = generator(im1, m2, z)
-                        pred_fake = discriminator(fake_im1, im2)
+
+                        z = resnet(im2 * m2)
+                        fake_im = generator(im1, im2 * m2, z)
+                        pred_fake = discriminator(fake_im, im2)
                         loss_GAN = config.lambda_gan * criterion_GAN(pred_fake, valid)
-                        # Style loss
-                        fake_m2 = torch.argmax(model(fake_im1), 1).unsqueeze(1).type(torch.uint8).to(config.device)
-                        fake_m2 = fake_im1 * fake_m2
-                        hair_loss = config.lambda_style * calc_style_loss(fake_m2, m2, vgg) + calc_content_loss(fake_m2, m2, vgg)
+
+                        # Hair, Face loss
+                        fake_m2 = torch.argmax(model(fake_im), 1).unsqueeze(1).type(torch.uint8).repeat(1, 3, 1, 1).to(config.device)
+                        if 0.5 * torch.sum(m1)  <= torch.sum(fake_m2) <= 1.5 * torch.sum(m1):
+                            hair_loss = config.lambda_style * calc_style_loss(fake_im * fake_m2, im2 * m2, vgg) + calc_content_loss(fake_im * fake_m2, im2 * m2, vgg)
+                            face_loss = l1_loss(fake_m2 * (1-fake_m2), im1 * (1-m1))
+                            sys.stdout.write("MobileHairNet works\n")
+                        else:
+                            hair_loss = config.lambda_style * calc_style_loss(fake_im * m1, im2 * m2, vgg) + calc_content_loss(fake_im * m1, im2 * m2, vgg)
+                            face_loss = l1_loss(fake_m2 * (1-m1), im1 * (1-m1))
+                            sys.stdout.write("MobileHairNet not works\n")
                         hair_loss *= config.lambda_hair
-                        # Face loss
-                        # face_loss = config.lambda_style * calc_style_loss(fake_im1 * (1-fake_m2), im1 * (1-m1), vgg) + calc_content_loss(fake_im1 * (1-fake_m2), im1 * (1-m1), vgg)
-                        face_loss = l1_loss(fake_m2 * (1-fake_m2), im1 * (1-m1))
-                        face_loss *= config.lambda_face
+
                         # Total loss
                         loss_G = loss_GAN + hair_loss + face_loss
                     
                         pred_real = discriminator(im1, im2)
                         loss_real = criterion_GAN(pred_real, valid)
                         # Fake loss
-                        pred_fake = discriminator(fake_im1.detach(), im2)
+                        pred_fake = discriminator(fake_im.detach(), im2)
                         loss_fake = criterion_GAN(pred_fake, fake)
                         # Total loss
                         loss_D = 0.5 * (loss_real + loss_fake)
+
                         msg = "Validation || loss_GAN: %.6f, hair loss: %.6f, face loss: %.6f, loss:_G: %.6f, loss_D: %.6f\n" % \
                               (loss_GAN.item(), hair_loss.item(), face_loss.item(), loss_G.item(), loss_D.item())
                         sys.stdout.write(msg)
-                        fname = os.path.join(config.save_path, "Validation_Epoch:%d_Batch:%d_%d.png" % (epoch, i, j))
-                        sample_images([im1[0], im2[0], fake_im1[0]], ["img1", "img2", "img1+img2"], fname)
-
-                        if j == 2:
-                            break
+                        fname = os.path.join(config.save_path, "Validation_Epoch:%d_Batch:%d.png" % (epoch, i))
+                        sample_images([im1[0], im2[0], fake_im[0]], ["img1", "img2", "img1+img2"], fname)
+                        break
 
         if epoch % config.checkpoint_interval == 0:
             models = [resnet, generator, discriminator]

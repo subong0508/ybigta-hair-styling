@@ -22,7 +22,7 @@ parser.add_argument("--lr", type=float, default=0.0002, help="adam: learning rat
 parser.add_argument("--b1", type=float, default=0.5, help="adam: decay of first order momentum of gradient")
 parser.add_argument("--b2", type=float, default=0.999, help="adam: decay of first order momentum of gradient")
 parser.add_argument(
-    "--sample_interval", type=int, default=500, help="interval between sampling of images from generators"
+    "--sample_interval", type=int, default=1, help="interval between sampling of images from generators"
 )
 parser.add_argument("--checkpoint_interval", type=int, default=1, help="interval between model checkpoints")
 

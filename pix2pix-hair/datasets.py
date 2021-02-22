@@ -17,10 +17,8 @@ def transform(img1, img2, image_size, model, device):
     img1, img2 = TF.normalize(img1, (0.5, 0.5, 0.5), (0.5, 0.5, 0.5)), TF.normalize(img2, (0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
     img1, img2 = img1.to(device), img2.to(device)
     # mask
-    mask1 = torch.argmax(model(img1.unsqueeze(0).to(device)).squeeze(0), 0).type(torch.uint8).to(device)
-    mask1 = img1 * mask1
-    mask2 = torch.argmax(model(img2.unsqueeze(0).to(device)).squeeze(0), 0).type(torch.uint8).to(device)
-    mask2 = img2 * mask2
+    mask1 = torch.argmax(model(img1.unsqueeze(0)), 1).type(torch.uint8).repeat(3, 1 ,1).to(device)
+    mask2 = torch.argmax(model(img2.unsqueeze(0)), 1).type(torch.uint8).repeat(3, 1 ,1).to(device)
     return img1, mask1, img2, mask2
 
 

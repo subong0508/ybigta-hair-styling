@@ -1,12 +1,17 @@
 Loading: ./hairsegmentation/checkpoints/MobileHairNet_epoch-198.pth...
 Done.
+MobileHairNet not works
 Epoch: 0 || Batch: 0
-Train || loss_GAN: 4.095819, hair loss: 12.734304, face loss: 5.916464, loss:_G: 22.746588, loss_D: 4.061200
-Validation || loss_GAN: 5.920413, hair loss: 5.810986, face loss: 6.390098, loss:_G: 18.121498, loss_D: 4.843368
-Validation || loss_GAN: 5.497276, hair loss: 11.399914, face loss: 5.594289, loss:_G: 22.491480, loss_D: 4.720418
-Validation || loss_GAN: 5.822196, hair loss: 9.822155, face loss: 6.735172, loss:_G: 22.379524, loss_D: 4.955806
+Train || loss_GAN: 3.289958, hair loss: 22.955069, face loss: 0.334195, loss:_G: 26.579222, loss_D: 3.283419
+MobileHairNet not works
+Validation || loss_GAN: 9.954016, hair loss: 39.448265, face loss: 0.364426, loss:_G: 49.766708, loss_D: 9.494869
+MobileHairNet not works
 Epoch: 0 || Batch: 1
-Train || loss_GAN: 6.669768, hair loss: 14.866789, face loss: 7.015326, loss:_G: 28.551882, loss_D: 5.541928
-Validation || loss_GAN: 2.767376, hair loss: 8.237023, face loss: 6.176497, loss:_G: 17.180897, loss_D: 2.432834
-Validation || loss_GAN: 3.215205, hair loss: 6.894946, face loss: 5.478339, loss:_G: 15.588490, loss_D: 2.786534
-Validation || loss_GAN: 2.848526, hair loss: 7.501123, face loss: 6.550920, loss:_G: 16.900568, loss_D: 2.593771
+Train || loss_GAN: 12.827643, hair loss: 43.825321, face loss: 0.376506, loss:_G: 57.029472, loss_D: 12.499143
+MobileHairNet not works
+Validation || loss_GAN: 1.593321, hair loss: 17.158880, face loss: 0.291287, loss:_G: 19.043488, loss_D: 1.480417
+MobileHairNet not works
+Epoch: 0 || Batch: 2
+Train || loss_GAN: 1.524788, hair loss: 20.550638, face loss: 0.266443, loss:_G: 22.341869, loss_D: 1.430679
+MobileHairNet not works
+Validation || loss_GAN: 1.390679, hair loss: 18.110718, face loss: 0.428141, loss:_G: 19.929539, loss_D: 1.448601
