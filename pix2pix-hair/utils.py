@@ -95,7 +95,6 @@ def sample_images(images, titles, fname):
         axes[i].imshow(im)
         axes[i].axis('off')
         axes[i].set_title(titles[i])
-    plt.show()
     plt.savefig(fname)
 
 
