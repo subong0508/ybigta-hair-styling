@@ -1,3 +1,14 @@
+# Images
+*.jpg
+*.png
+*.JPG
+*.JPEG
+*.PNG
+
+# vscode
+.vscode/*
+__pycache__/*
+
 # General
 .DS_Store
 .AppleDouble
