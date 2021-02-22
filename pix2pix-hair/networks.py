@@ -39,7 +39,7 @@ class Vgg16(torch.nn.Module):
 
 
 class ResNet18(torch.nn.Module):
-    def __init__(self, requires_grad=True, pretrained=False):
+    def __init__(self, requires_grad=True, pretrained=True):
         super(ResNet18, self).__init__()
         model = models.resnet18(pretrained=pretrained)
         self.model = torch.nn.Sequential(*(list(model.children())[:-1]))
@@ -50,16 +50,3 @@ class ResNet18(torch.nn.Module):
     def forward(self, x):
         out = self.model(x)
         return out
-
-if __name__ == "__main__":
-    from configs import get_config
-    from models import GeneratorUNet
-
-    config = get_config()
-    resnet = ResNet18(False).to(config.device)
-    t = torch.randn((64, 3, 256, 256)).to(config.device)
-    # 64 x 512 x 1 x 1
-    z = resnet(t)
-    gen = GeneratorUNet().to(config.device)
-    with torch.no_grad():
-        print(gen(t, z).shape)

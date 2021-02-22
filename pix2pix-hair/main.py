@@ -25,30 +25,29 @@ def main(config):
 
     # Loss Functions
     criterion_GAN = mse_loss
-    style_loss = calc_style_loss
 
     # Calculate output of image discriminator (PatchGAN)
     patch = (1, config.image_size // 2 ** 4, config.image_size // 2 ** 4)
 
     # Initialize
     vgg = Vgg16().to(config.device)
-    resnet = ResNet18(requires_grad=False, pretrained=True).to(config.device)
+    resnet = ResNet18(requires_grad=True, pretrained=True).to(config.device)
     generator = GeneratorUNet().to(config.device)
     discriminator = Discriminator().to(config.device)
 
     if config.epoch != 0:
     # Load pretrained models
-        # resnet.load_state_dict(torch.load(os.path.join(config.checkpoints, 'epoch:%d_%s.pth' % (config.epoch, 'resnet'))))
+        resnet.load_state_dict(torch.load(os.path.join(config.checkpoints, 'epoch:%d_%s.pth' % (config.epoch, 'resnet'))))
         generator.load_state_dict(torch.load(os.path.join(config.checkpoints, 'epoch:%d_%s.pth' % (config.epoch, 'generator'))))
         discriminator.load_state_dict(torch.load(os.path.join(config.checkpoints, 'epoch:%d_%s.pth' % (config.epoch, 'discriminator'))))
     else:
         # Initialize weights
-        # resnet.apply(weights_init_normal)
+        resnet.apply(weights_init_normal)
         generator.apply(weights_init_normal)
         discriminator.apply(weights_init_normal)
 
     # Optimizers
-    # optimizer_resnet = torch.optim.Adam(resnet.parameters(), lr=config.lr, betas=(config.b1, config.b2))
+    optimizer_resnet = torch.optim.Adam(resnet.parameters(), lr=config.lr, betas=(config.b1, config.b2))
     optimizer_G = torch.optim.Adam(generator.parameters(), lr=config.lr, betas=(config.b1, config.b2))
     optimizer_D = torch.optim.Adam(discriminator.parameters(), lr=config.lr, betas=(config.b1, config.b2))
 
@@ -69,7 +68,7 @@ def main(config):
             #  Train Generators
             # ------------------
 
-            # optimizer_resnet.zero_grad()
+            optimizer_resnet.zero_grad()
             optimizer_G.zero_grad()
 
             # GAN loss
@@ -90,7 +89,7 @@ def main(config):
             loss_G = loss_GAN + hair_loss + face_loss
             
             loss_G.backward()
-            # optimizer_resnet.step()
+            optimizer_resnet.step()
             optimizer_G.step()
 
             # ---------------------
@@ -157,8 +156,8 @@ def main(config):
                             break
 
         if epoch % config.checkpoint_interval == 0:
-            models = [generator, discriminator]
-            fnames = ['generator', 'discriminator']
+            models = [resnet, generator, discriminator]
+            fnames = ['resnet', 'generator', 'discriminator']
             fnames = [os.path.join(config.checkpoints, 'epoch:%d_%s.pth' % (epoch, s)) for s in fnames]
             save_weights(models, fnames)
 
