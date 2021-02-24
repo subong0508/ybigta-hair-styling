@@ -11,9 +11,9 @@ parser.add_argument('--image_size', type=int, default=256)
 parser.add_argument('--checkpoints', type=str, default='./checkpoints')
 parser.add_argument('--save_path', type=str, default='./samples/results')
 parser.add_argument('--p', type=float, default=0.9)
-parser.add_argument('--lambda_gan', type=float, default=10)
-parser.add_argument('--lambda_hair', type=float, default=1)
-parser.add_argument('--lambda_face', type=float, default=100)
+parser.add_argument('--lambda_gan', type=float, default=100)
+parser.add_argument('--lambda_hair', type=float, default=10)
+parser.add_argument('--lambda_face', type=float, default=1)
 parser.add_argument('--lambda_style', type=float, default=1e5)
 parser.add_argument("--epoch", type=int, default=0, help="epoch to start training from")
 parser.add_argument("--n_epochs", type=int, default=200, help="number of epochs of training")
@@ -22,7 +22,7 @@ parser.add_argument("--lr", type=float, default=0.0002, help="adam: learning rat
 parser.add_argument("--b1", type=float, default=0.5, help="adam: decay of first order momentum of gradient")
 parser.add_argument("--b2", type=float, default=0.999, help="adam: decay of first order momentum of gradient")
 parser.add_argument(
-    "--sample_interval", type=int, default=1, help="interval between sampling of images from generators"
+    "--sample_interval", type=int, default=500, help="interval between sampling of images from generators"
 )
 parser.add_argument("--checkpoint_interval", type=int, default=1, help="interval between model checkpoints")
 

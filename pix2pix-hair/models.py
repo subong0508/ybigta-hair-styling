@@ -88,14 +88,7 @@ class GeneratorUNet(nn.Module):
         self.up62 = UNetUp(512, 128)
         self.up72 = UNetUp(256, 64)
 
-        self.final1 = nn.Sequential(
-            nn.Upsample(scale_factor=2),
-            nn.ZeroPad2d((1, 0, 1, 0)),
-            nn.Conv2d(128, out_channels, 4, padding=1),
-            nn.Tanh(),
-        )
-
-        self.final2 = nn.Sequential(
+        self.final = nn.Sequential(
             nn.Upsample(scale_factor=2),
             nn.ZeroPad2d((1, 0, 1, 0)),
             nn.Conv2d(128, out_channels, 4, padding=1),
@@ -104,41 +97,37 @@ class GeneratorUNet(nn.Module):
 
     def forward(self, x1, x2, z):
         # U-Net generator with skip connections from encoder to decoder
-        d1 = self.down11(x1)
-        d2 = self.down21(d1)
-        d3 = self.down31(d2)
-        d4 = self.down41(d3)
-        d5 = self.down51(d4)
-        d6 = self.down61(d5)
-        d7 = self.down71(d6)
-        d8 = self.down81(d7)
-        # Hair Feature map
-        d8 += z
-        u1 = self.up11(d8, d7)
-        u2 = self.up21(u1, d6)
-        u3 = self.up31(u2, d5)
-        u4 = self.up41(u3, d4)
-        u5 = self.up51(u4, d3)
-        u6 = self.up61(u5, d2)
-        u71 = self.up71(u6, d1)
-        
-        d1 = self.down12(x2)
-        d2 = self.down22(d1)
-        d3 = self.down32(d2)
-        d4 = self.down42(d3)
-        d5 = self.down52(d4)
-        d6 = self.down62(d5)
-        d7 = self.down72(d6)
-        d8 = self.down82(d7)
-        u1 = self.up12(d8, d7)
-        u2 = self.up22(u1, d6)
-        u3 = self.up32(u2, d5)
-        u4 = self.up42(u3, d4)
-        u5 = self.up52(u4, d3)
-        u6 = self.up62(u5, d2)
-        u72 = self.up72(u6, d1)
+        d11 = self.down11(x1) 
+        d21 = self.down21(d11)
+        d31 = self.down31(d21)
+        d41 = self.down41(d31)
+        d51 = self.down51(d41)
+        d61 = self.down61(d51)
+        d71 = self.down71(d61)
+        d81 = self.down81(d71)
 
-        out = (self.final1(u71) + self.final2(u72)) / 2
+        d12 = self.down12(x2)
+        d22 = self.down22(d12)
+        d32 = self.down32(d22)
+        d42 = self.down42(d32)
+        d52 = self.down52(d42)
+        d62 = self.down62(d52)
+        d72 = self.down72(d62)
+        d82 = self.down82(d72)
+
+        # Hair Feature map
+        # d8, z: b x 512 x 1 x 1
+        d81 += z
+
+        u1 = self.up11(d81, d71) + self.up12(d82, d72)
+        u2 = self.up21(u1, d61) + self.up22(u1, d62)
+        u3 = self.up31(u2, d51) + self.up32(u2, d52)
+        u4 = self.up41(u3, d41) + self.up42(u3, d42)
+        u5 = self.up51(u4, d31) + self.up52(u4, d32)
+        u6 = self.up61(u5, d21) + self.up62(u5, d22)
+        u7 = self.up71(u6, d11) + self.up71(u6, d12)
+
+        out = self.final(u7)
 
         return out
 

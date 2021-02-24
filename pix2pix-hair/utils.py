@@ -65,6 +65,7 @@ def calc_style_loss(img1, img2, vgg):
     style_loss = 0
     for st1, st2 in zip(gram_style1, gram_style2):
         style_loss += mse_loss(st1, st2)
+    del style1, style2, gram_style1, gram_style2
     return style_loss
 
 
@@ -95,6 +96,7 @@ def sample_images(images, titles, fname):
         axes[i].imshow(im)
         axes[i].axis('off')
         axes[i].set_title(titles[i])
+    plt.show()
     plt.savefig(fname)
 
 

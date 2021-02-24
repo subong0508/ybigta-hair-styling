@@ -1,7 +1,0 @@
-Loading: ./hairsegmentation/checkpoints/MobileHairNet_epoch-198.pth...
-Done.
-MobileHairNet not works
-Epoch: 0 || Batch: 0
-Train || loss_GAN: 2.161142, hair loss: 14.956749, face loss: 31.993774, loss:_G: 49.111664, loss_D: 2.002174
-MobileHairNet not works
-Validation || loss_GAN: 10.633228, hair loss: 39.963955, face loss: 35.524830, loss:_G: 86.122009, loss_D: 10.493480
