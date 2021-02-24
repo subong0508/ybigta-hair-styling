@@ -1,8 +1,10 @@
 import os
 import random
 from random import random as r
+from utils import load_model
 import numpy as np
 from PIL import Image
+import matplotlib.pyplot as plt
 
 import torch
 from torch.utils.data import Dataset, DataLoader
@@ -48,6 +50,7 @@ class ImageDataset(Dataset):
         self.config = config
         self.transform = transform
         self.images = [os.path.join(config.image_path, img) for img in os.listdir(config.image_path)]
+        random.shuffle(self.images)
     
     def __len__(self):
         n = len(self.images)
@@ -61,17 +64,17 @@ class ImageDataset(Dataset):
         n = len(self.images)
         n1 = int(n * self.config.p)
         if self.train:
-            other = random.randint(0, n1)
+            other = random.randint(0, n1-1)
             while other == idx:
-                other = random.randint(0, n1)
+                other = random.randint(0, n1-1)
             img1 = Image.open(self.images[idx])
             img2 = Image.open(self.images[other])
         else:
-            other = random.randint(0, n-n1)
+            other = random.randint(0, n-n1-1)
             while other == idx:
-                other = random.randint(0, n-n1)
-            img1 = Image.open(self.images[idx])
-            img2 = Image.open(self.images[other])
+                other = random.randint(0, n-n1-1)
+            img1 = Image.open(self.images[n1+idx])
+            img2 = Image.open(self.images[n1+other])
         return self.transform(img1, img2, 
                 self.config.image_size, self.model, self.config.device)
 
@@ -102,34 +105,13 @@ def save_images(im1, im2, titles, filename, *, mask=False):
 
 if __name__ == "__main__":
     from configs import get_config
-    from utils import load_model
-    from networks import Vgg16
-    from utils import calc_content_loss, calc_style_loss
-
-    import warnings
-    import numpy as np
-    import matplotlib.pyplot as plt
-
-    warnings.filterwarnings('ignore')
+    from utils import *
 
     config = get_config()
     model = load_model(config)
-    vgg = Vgg16(requires_grad=False).to(config.device)
-
-    dataset = ImageDataset(model, config)
-    dataloader = DataLoader(dataset, shuffle=False)
-    for i, (im1, m1, im2, m2) in enumerate(dataloader):
-        s_loss = calc_style_loss(im1, im2, vgg)
-        c_loss = calc_content_loss(im1, im2, vgg)
-        f_name = f'{1e5 * s_loss:.6f}'
-        im1.squeeze_(0)
-        im2.squeeze_(0)
-        save_images(im1, im2, [f"style:{1e5 * s_loss:.3f}", f"content:{c_loss:.3f}"], f_name)
-        s_loss = calc_style_loss(m1, m2, vgg)
-        c_loss = calc_content_loss(m1, m2, vgg)
-        m1.squeeze_(0)
-        m2.squeeze_(0)
-        f_name = f'{1e5 * s_loss:.6f}'
-        save_images(m1, m2, [f"style:{1e5 * s_loss:.3f}", f"content:{c_loss:.3f}"], f_name, mask=True)
-        if i == 100:
-            break
+    train, val = get_loaders(model, config)
+    print(len(train), len(val))
+    for i, (im1, m1, im2, m2) in enumerate(train):
+        print("Train: %d" % i)
+    for i, (im1, m1, im2, m2) in enumerate(val):
+        print("Validation: %d" % i)
