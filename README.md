@@ -39,11 +39,11 @@ For detailed descriptions, we recommend you to check **configs.py** in each dire
 
 #### sampled images during training
 
-![img1](./imgs/pix2pix_1.png)
+![img1](./imgs/pix2pix__1.png)
 
-![img2](./imgs/pix2pix_2.png)
+![img2](./imgs/pix2pix__2.png)
 
-![img3](./imgs/pix2pix_3.png)
+![img3](./imgs/pix2pix__3.png)
 
 
 ### 3. MichiGAN
