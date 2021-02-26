@@ -12,6 +12,7 @@ This repository is for recording YBIGTA 18th freshman project(Feb, 2021)
 
 ## Train
 There are 3 ways to train your hair styling application.
+
 Note that you should change your argument ```--image_path``` in **configs.py** correctly!
 
 ### Pix2Pix-Hair
