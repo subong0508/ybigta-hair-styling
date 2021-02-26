@@ -15,12 +15,16 @@ There are 3 ways to train your hair styling application.
 
 Note that you should change your argument ```--image_path``` in **configs.py** correctly!
 
-### Pix2Pix-Hair
+For detailed descriptions, we recommend you to check **configs.py** in each directory.
 
+### Pix2Pix-Hair
+    
+    cd pix2pix-hair
     python main.py
     
 ### Pix2Pix-Skin and Hair
 
+    cd pix2pix
     python main.py
 
 ### MichiGAN
@@ -29,6 +33,7 @@ Note that you should change your argument ```--image_path``` in **configs.py** c
 
 ### PixPix-Hair
 
+    cd pix2pix-hair
     python inference.py --your_pic {your_img_path} --celeb_pic {celeb_img_path}
     
 ### PixPix-Skin and Hair
