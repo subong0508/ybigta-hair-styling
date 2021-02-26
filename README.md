@@ -22,7 +22,7 @@ For detailed descriptions, we recommend you to check **configs.py** in each dire
     cd pix2pix-hair
     python main.py
     
-#### Sampled Images during Training
+#### sampled images during training
 
 ![img1](./imgs/pix2pix_hair_1.png)
 
