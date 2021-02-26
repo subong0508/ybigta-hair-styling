@@ -45,7 +45,6 @@ For detailed descriptions, we recommend you to check **configs.py** in each dire
 
 ![img3](./imgs/pix2pix_3.png)
 
-![img4](./imgs/pix2pix_4.png)
 
 ### 3. MichiGAN
 
