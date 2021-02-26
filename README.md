@@ -54,4 +54,6 @@ For detailed descriptions, we recommend you to check **configs.py** in each dire
 
 ### 3. MichiGAN
 
+<hr>
+
 For pretrained resnet and generator, you can download them [here](https://drive.google.com/drive/u/0/folders/1rZOmFv0OaMbolPGBl1NBhz56Gn_C2c9H).
