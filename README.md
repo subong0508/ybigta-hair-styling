@@ -37,6 +37,16 @@ For detailed descriptions, we recommend you to check **configs.py** in each dire
     cd pix2pix
     python main.py
 
+#### sampled images during training
+
+![img1](./imgs/pix2pix_1.png)
+
+![img2](./imgs/pix2pix_2.png)
+
+![img3](./imgs/pix2pix_3.png)
+
+![img4](./imgs/pix2pix_4.png)
+
 ### 3. MichiGAN
 
 ## Evaluate
@@ -51,6 +61,9 @@ For detailed descriptions, we recommend you to check **configs.py** in each dire
 ![img](./imgs/pix2pix_hair_inf.png)
     
 ### 2. PixPix-Skin and Hair
+
+    cd pix2pix
+    python inference.py --your_pic {your_img_path} --celeb_pic {celeb_img_path}
 
 ### 3. MichiGAN
 
