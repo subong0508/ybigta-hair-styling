@@ -16,3 +16,4 @@ This repository is for recording YBIGTA 18th freshman project(Feb, 2021)
 
 ## Evaluate
 
+For pretrained resnet and generator, you can download them [here](https://drive.google.com/drive/u/0/folders/1rZOmFv0OaMbolPGBl1NBhz56Gn_C2c9H).
