@@ -17,10 +17,22 @@ Note that you should change your argument ```--image_path``` in **configs.py** c
 
 ### Pix2Pix-Hair
 
+    python main.py
+    
 ### Pix2Pix-Skin and Hair
+
+    python main.py
 
 ### MichiGAN
 
 ## Evaluate
+
+### PixPix-Hair
+
+    python inference.py --your_pic {your_img_path} --celeb_pic {celeb_img_path}
+    
+### PixPix-Skin and Hair
+
+### MichiGAN
 
 For pretrained resnet and generator, you can download them [here](https://drive.google.com/drive/u/0/folders/1rZOmFv0OaMbolPGBl1NBhz56Gn_C2c9H).
