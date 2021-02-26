@@ -12,21 +12,19 @@ from models import GeneratorUNet, Discriminator
 from networks import Vgg16, ResNet18
 from datasets import transform
 from torch.utils.data import DataLoader
+import matplotlib.pyplot as plt
     
 def inference(config):
     hair_model, skin_model = load_model(config)
 
     #train_loader, val_loader = get_loaders(hair_model, skin_model, config)
-    loadpic=False
-    while loadpic is False:
-        try:
-            your_pic = input('Write the absolute path of your image : ')
-            celeb_pic = input('Write the absolute path of the celebrity image you wish to synthesize to your picture : ')
-            your_pic = Image.open(your_pic)
-            celeb_pic = Image.open(celeb_pic)
-            loadpic=True
-        except:
-            continue
+
+    try:
+        your_pic = Image.open(config.your_pic)
+        celeb_pic = Image.open(config.celeb_pic)
+
+    except:
+        return
     
     your_pic,your_pic_mask,celeb_pic,celeb_pic_mask = DataLoader(transform(your_pic,celeb_pic,config.image_size,
                                                                     hair_model,skin_model,config.device))
