@@ -71,8 +71,7 @@ For detailed descriptions, we recommend you to check **configs.py** in each dire
     cd michigan
     python inference.py --name MichiGAN --gpu_ids 0 --inference_ref_name 60429 --inference_tag_name 56024 --inference_orient_name 60429 --netG spadeb --which_epoch 50 --use_encoder --noise_background --expand_th 5 --load_size 512 --crop_size 512 --add_feat_zeros --data_dir ./datasets/FFHQ_single --expand_tag_mask
 
-![img](./michigan/inference_samples/6_fake_image.jpg)
-![img2]((./michigan/inference_samples/7_fake_image.jpg))
+![image](https://user-images.githubusercontent.com/53969182/109367501-93edbe80-78d9-11eb-9ed0-a8901c2964ab.png)
 <hr>
 
 For pretrained resnet and generator, you can download them [here](https://drive.google.com/drive/u/0/folders/1rZOmFv0OaMbolPGBl1NBhz56Gn_C2c9H).
