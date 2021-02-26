@@ -27,7 +27,11 @@ parser.add_argument(
     "--sample_interval", type=int, default=500, help="interval between sampling of images from generators"
 )
 parser.add_argument("--checkpoint_interval", type=int, default=1, help="interval between model checkpoints")
-
+parser.add_argument('--your_pic',type=str,help='The absolute path of your image')
+parser.add_argument('--celeb_pic',type=str,help='The absolute path of the celebrity image you wish to synthesize to your picture.')
 
 def get_config():
-    return parser.parse_args()
+    args = parser.parse_args()
+    your_pic = args.your_pic
+    celeb_pic = args.celeb_pic
+    return args
