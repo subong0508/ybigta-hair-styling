@@ -46,6 +46,10 @@ For detailed descriptions, we recommend you to check **configs.py** in each dire
     cd pix2pix-hair
     python inference.py --your_pic {your_img_path} --celeb_pic {celeb_img_path}
     
+### Sample
+
+![img](./imgs/pix2pix_hair_inf.png)
+    
 ### 2. PixPix-Skin and Hair
 
 ### 3. MichiGAN
